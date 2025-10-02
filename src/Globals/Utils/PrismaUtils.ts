@@ -1,16 +1,20 @@
-import { IQueryDto } from "#API/Interfaces/Dto/IQueryDto.js";
+import { IFindManyQueryDto } from "#API/Interfaces/Dto/Shared/IFindManyQueryDto.js";
 import { Prisma } from "#Infrastructure/Database/Prisma/index.js";
 
 export function buildFindManyArgs<T extends keyof Prisma.TypeMap["model"]>(
-  criteria: IQueryDto,
+  criteria: IFindManyQueryDto,
   options?: {
     searchableFields?: string[]; // ✅ simpler and flexible
   },
 ): Prisma.TypeMap["model"][T]["operations"]["findMany"]["args"] {
-  const { page = 0, limit = 10, sortBy, sortOrder = "asc", search } = criteria;
+  // Default page is now 1 (first page)
+  const { page = 1, limit = 10, sortBy, sortOrder = "asc", search } = criteria;
 
-  const args: any = {
-    skip: page * limit,
+  // Guard against a zero or negative page value – treat it as the first page
+  const safePage = Math.max(page, 1);
+
+  const args: Prisma.TypeMap["model"][T]["operations"]["findMany"]["args"] = {
+    skip: (safePage - 1) * limit,
     take: Math.min(limit, 100),
   };
 

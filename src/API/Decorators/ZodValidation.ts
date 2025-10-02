@@ -10,24 +10,36 @@ export function zodValidation(schema: ZodType<any>, dtoLocation: "body" | "param
     descriptor.value = async function (...args: any[]) {
       try {
         const req: Request = args[0];
-        let dto = req[dtoLocation];
+        const dto = req[dtoLocation];
 
-        if (!dto || !Object.keys(dto).length) {
+        /* if (!dto || !Object.keys(dto).length) {
           dto = undefined;
-        }
+        } */
 
-        const parsedDto = await schema.safeParseAsync(dto);
-        console.log(parsedDto.data);
+        const parsedDto = await schema.parseAsync(dto);
+        console.log(parsedDto);
 
-        if (parsedDto.data) req[dtoLocation] = parsedDto.data;
+        if (parsedDto)
+          switch (dtoLocation) {
+            case "body":
+              req.body = parsedDto;
+              break;
+            case "query":
+              Object.assign(req.query, parsedDto);
+              break;
+            case "params":
+              Object.assign(req.params, parsedDto);
+              break;
+          }
+
         return originalMethod.apply(this, args);
       } catch (error: any) {
         if (error instanceof ZodError) {
           const message = error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`).join("; ");
-          throw new AppError(`Validation failed: ${message}`, status.BAD_REQUEST);
+          throw new AppError(`Validation failed: ${message}`, status.BAD_REQUEST, error);
         }
 
-        throw new AppError(`Validation failed: ${error.message}`, status.BAD_REQUEST);
+        throw new AppError(`${error.message}`, status.BAD_REQUEST, error);
       }
     };
 
