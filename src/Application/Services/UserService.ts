@@ -7,11 +7,12 @@ import { AppError } from "#Globals/Utils/AppError.js";
 import { UserCache } from "#Infrastructure/Cache/UserCache.js";
 import { buildFindManyArgs } from "#Globals/Utils/PrismaUtils.js";
 import { IUserServiceCreate } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceCreate.js";
-import { IServiceFindOne } from "#Application/Interfaces/ServiceCriteria/Shared/IServiceFindOne.js";
 import status from "http-status";
 import { IServiceFindById } from "#Application/Interfaces/ServiceCriteria/Shared/IServiceFindById.js";
 import { IUserServiceFindByUsername } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceFindByUsername.js";
 import { IServiceFindMany } from "#Application/Interfaces/ServiceCriteria/Shared/IServiceFindMany.js";
+import { IUserServiceUpdate } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceUpdate.js";
+import { IUserServiceDelete } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceDelete.js";
 
 @injectable()
 export class UserService implements IUserService {
@@ -20,12 +21,16 @@ export class UserService implements IUserService {
     @inject(DITypes.UserCache) private readonly userCache: UserCache,
   ) {}
 
-  findById(criteria: IServiceFindById): Promise<IUserDto | null> {
-    return this.rep.findUnique({ where: { id: criteria } });
+  async findById(criteria: IServiceFindById): Promise<IUserDto> {
+    const user = await this.rep.findUnique({ where: { id: criteria } });
+    if (!user) throw new AppError("User not found", status.NOT_FOUND);
+    return toUserDto(user);
   }
 
-  findByUsername(criteria: IUserServiceFindByUsername): Promise<IUserDto | null> {
-    return this.rep.findUnique({ where: { username: criteria } });
+  async findByUsername(criteria: IUserServiceFindByUsername): Promise<IUserDto> {
+    const user = await this.rep.findUnique({ where: { username: criteria } });
+    if (!user) throw new AppError("User not found", status.NOT_FOUND);
+    return toUserDto(user);
   }
 
   async findMany(criteria: IServiceFindMany): Promise<IUserDto[]> {
@@ -37,7 +42,7 @@ export class UserService implements IUserService {
   }
 
   async create(criteria: IUserServiceCreate): Promise<IUserDto> {
-    const existingUser = await this.findOne({ value: criteria.username, field: "username" });
+    const existingUser = await this.rep.findUnique({ where: { username: criteria.username }, select: { id: true } });
 
     if (existingUser) throw new AppError("This user is already exists", status.BAD_REQUEST);
 
@@ -49,8 +54,15 @@ export class UserService implements IUserService {
     return userDto;
   }
 
-  async findOne(criteria: IServiceFindOne): Promise<IUserDto | null> {
-    const user = await this.rep.findOne({ where: { [criteria.field]: criteria.value } });
-    return user ? toUserDto(user) : null;
+  async delete(criteria: IUserServiceDelete): Promise<void> {
+    const user = await this.rep.findUnique({ where: { id: criteria.id }, select: { id: true } });
+    if (!user) throw new AppError("User not found", status.NOT_FOUND);
+    await this.rep.delete({ where: { id: criteria.id }, select: { id: true } });
+  }
+
+  async update(criteria: IUserServiceUpdate): Promise<void> {
+    const user = await this.rep.findUnique({ where: { id: criteria.id }, select: { id: true } });
+    if (!user) throw new AppError("User not found", status.NOT_FOUND);
+    await this.rep.update({ data: criteria, where: { id: criteria.id }, select: { id: true } });
   }
 }

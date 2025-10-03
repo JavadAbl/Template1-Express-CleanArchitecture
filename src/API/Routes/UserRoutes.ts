@@ -21,5 +21,7 @@ export class UserRoutes {
     this.router.get("/", (req, res) => this.userController.get(req, res));
     this.router.get("/:id", (req, res) => this.userController.getById(req, res));
     this.router.post("/", (req, res) => this.userController.post(req, res));
+    this.router.put("/", (req, res) => this.userController.put(req, res));
+    this.router.delete("/:id", (req, res) => this.userController.delete(req, res));
   }
 }

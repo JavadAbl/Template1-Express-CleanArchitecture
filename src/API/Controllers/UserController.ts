@@ -10,6 +10,9 @@ import { IUserCreateDto } from "#API/Interfaces/Dto/User/IUserCreateDto.js";
 import { SUserCreate } from "#API/Schema/User/SUserCreate.js";
 import { SFindManyQuery } from "#API/Schema/Shared/SFindManyQuery.js";
 import { IFindManyQueryDto } from "#API/Interfaces/Dto/Shared/IFindManyQueryDto.js";
+import { IUserDto } from "#API/Interfaces/Dto/User/IUserDto.js";
+import { IDeleteDto } from "#API/Interfaces/Dto/Shared/IDeleteDto.js";
+import { SDelete } from "#API/Schema/Shared/SDelete.js";
 
 @injectable()
 export class UserController {
@@ -30,8 +33,17 @@ export class UserController {
   @zodValidation(SGetById, "params")
   public async getById(req: Request<IGetByIdDto, unknown, unknown, unknown>, res: Response) {
     const user = await this.userService.findById(req.params.id);
-
-    if (!user) return res.status(status.NOT_FOUND).send("User not found");
     return res.json(user);
+  }
+
+  public async put(req: Request<unknown, unknown, IUserDto, unknown>, res: Response) {
+    await this.userService.update(req.body);
+    return res.status(status.NO_CONTENT).send();
+  }
+
+  @zodValidation(SDelete, "params")
+  public async delete(req: Request<IDeleteDto, unknown, unknown, unknown>, res: Response) {
+    await this.userService.delete(req.params);
+    return res.status(status.NO_CONTENT).send();
   }
 }

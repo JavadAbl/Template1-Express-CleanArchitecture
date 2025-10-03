@@ -17,18 +17,18 @@ export function zodValidation(schema: ZodType<any>, dtoLocation: "body" | "param
         } */
 
         const parsedDto = await schema.parseAsync(dto);
-        console.log(parsedDto);
 
         if (parsedDto)
           switch (dtoLocation) {
             case "body":
               req.body = parsedDto;
               break;
-            case "query":
-              Object.assign(req.query, parsedDto);
-              break;
+
             case "params":
               Object.assign(req.params, parsedDto);
+              break;
+
+            default:
               break;
           }
 
