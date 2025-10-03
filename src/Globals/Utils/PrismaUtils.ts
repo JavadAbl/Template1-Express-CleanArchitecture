@@ -1,4 +1,4 @@
-import { IFindManyQueryDto } from "#API/Interfaces/Dto/Shared/IFindManyQueryDto.js";
+import { IFindManyQueryDto } from "#Application/Interfaces/Request/Shared/IFindManyQueryRequest.js";
 import { Prisma } from "#Infrastructure/Database/Prisma/index.js";
 
 export function buildFindManyArgs<T extends keyof Prisma.TypeMap["model"]>(

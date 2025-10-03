@@ -1,3 +1,3 @@
-import { IUserCreateDto } from "#API/Interfaces/Dto/User/IUserCreateDto.js";
+import { IUserCreateDto } from "#Application/Interfaces/Dto/User/IUserCreateRequest.js";
 
 export type IUserServiceCreate = IUserCreateDto;

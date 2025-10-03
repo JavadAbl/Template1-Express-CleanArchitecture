@@ -1,5 +1,5 @@
 import { IUserService } from "#Application/Interfaces/Services/IUserService.js";
-import { IUserDto, toUserDto } from "#API/Interfaces/Dto/User/IUserDto.js";
+import { IUserDto, toUserDto } from "#Application/Interfaces/Dto/User/IUserDto.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
 import { IUserRepository } from "#Infrastructure/Database/Interfaces/IUserRepository.js";
 import { inject, injectable } from "inversify";

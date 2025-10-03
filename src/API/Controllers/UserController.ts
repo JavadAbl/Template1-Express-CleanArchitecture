@@ -5,13 +5,13 @@ import { DITypes } from "#Globals/DI/DITypes.js";
 import { zodValidation } from "#API/Decorators/ZodValidation.js";
 import status from "http-status";
 import { SGetById } from "#API/Schema/Shared/SGetById.js";
-import { IGetByIdDto } from "#API/Interfaces/Dto/Shared/IGetByIdDto.js";
-import { IUserCreateDto } from "#API/Interfaces/Dto/User/IUserCreateDto.js";
+import { IGetByIdDto } from "#Application/Interfaces/Request/Shared/IGetByIdRequest.js";
+import { IUserCreateDto } from "#Application/Interfaces/Dto/User/IUserCreateRequest.js";
 import { SUserCreate } from "#API/Schema/User/SUserCreate.js";
 import { SFindManyQuery } from "#API/Schema/Shared/SFindManyQuery.js";
-import { IFindManyQueryDto } from "#API/Interfaces/Dto/Shared/IFindManyQueryDto.js";
-import { IUserDto } from "#API/Interfaces/Dto/User/IUserDto.js";
-import { IDeleteDto } from "#API/Interfaces/Dto/Shared/IDeleteDto.js";
+import { IFindManyQueryDto } from "#Application/Interfaces/Request/Shared/IFindManyQueryRequest.js";
+import { IUserDto } from "#Application/Interfaces/Dto/User/IUserDto.js";
+import { IDeleteDto } from "#Application/Interfaces/Request/Shared/IDeleteRequest.js";
 import { SDelete } from "#API/Schema/Shared/SDelete.js";
 
 @injectable()

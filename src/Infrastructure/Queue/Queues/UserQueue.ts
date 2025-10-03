@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { BaseQueue } from "./BaseQueue.js";
 import { UserContract, UserJobs } from "../Jobs/UserJobsContract.js";
-import { IRegisterUser } from "#API/Interfaces/Dto/User/IUserCreateDto.js";
+import { IRegisterUser } from "#Application/Interfaces/Dto/User/IUserCreateRequest.js";
 
 @injectable()
 export class UserQueue extends BaseQueue<UserContract> {

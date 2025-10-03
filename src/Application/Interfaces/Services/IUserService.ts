@@ -1,4 +1,4 @@
-import { IUserDto } from "#API/Interfaces/Dto/User/IUserDto.js";
+import { IUserDto } from "#Application/Interfaces/Dto/User/IUserDto.js";
 import { IServiceFindMany } from "../ServiceCriteria/Shared/IServiceFindMany.js";
 import { IUserServiceCreate } from "../ServiceCriteria/User/IUserServiceCreate.js";
 import { IServiceFindById } from "../ServiceCriteria/Shared/IServiceFindById.js";
