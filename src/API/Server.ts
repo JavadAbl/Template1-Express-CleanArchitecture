@@ -12,6 +12,7 @@ import status from "http-status";
 import { errorHandlerMiddleware } from "./Middlewars/ErrorHandlerMiddleware.js";
 import { config } from "#Globals/Configs/AppConfig.js";
 import { AppLogger } from "#Globals/Utils/Logger.js";
+import { UserWorker } from "#Infrastructure/Queue/Workers/UserWorker.js";
 
 const logger = AppLogger.createLogger("Server");
 
@@ -25,6 +26,7 @@ export class AppServer {
       this.setupRoutesMiddlewares(this.app);
       this.setupErrorHandler(this.app);
       this.setupHttpServer(this.app);
+      this.setupWorkers();
     } catch (error) {
       logger.error(error, "Sd");
       process.exit(1);
@@ -79,5 +81,9 @@ export class AppServer {
     });
 
     return httpServer;
+  }
+
+  private setupWorkers() {
+    container.get<UserWorker>(DITypes.UserWorker);
   }
 }

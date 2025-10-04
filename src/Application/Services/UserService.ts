@@ -1,7 +1,6 @@
-import { IUserService } from "#Application/Interfaces/Services/IUserService.js";
+import { IUserService } from "#Application/Interfaces/Service/IUserService.js";
 import { IUserDto, toUserDto } from "#Application/Interfaces/Dto/User/IUserDto.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
-import { IUserRepository } from "#Infrastructure/Database/Interfaces/IUserRepository.js";
 import { inject, injectable } from "inversify";
 import { AppError } from "#Globals/Utils/AppError.js";
 import { UserCache } from "#Infrastructure/Cache/UserCache.js";
@@ -13,6 +12,7 @@ import { IUserServiceFindByUsername } from "#Application/Interfaces/ServiceCrite
 import { IServiceFindMany } from "#Application/Interfaces/ServiceCriteria/Shared/IServiceFindMany.js";
 import { IUserServiceUpdate } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceUpdate.js";
 import { IUserServiceDelete } from "#Application/Interfaces/ServiceCriteria/User/IUserServiceDelete.js";
+import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
 
 @injectable()
 export class UserService implements IUserService {
@@ -49,7 +49,7 @@ export class UserService implements IUserService {
     const user = await this.rep.create({ data: criteria });
 
     const userDto = toUserDto(user);
-    await this.userCache.set(String(user.id), userDto, 3600);
+    this.userCache.addUser(userDto);
 
     return userDto;
   }

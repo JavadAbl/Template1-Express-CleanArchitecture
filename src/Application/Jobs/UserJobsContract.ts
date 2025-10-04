@@ -1,6 +1,6 @@
 // UserJobsContract.ts
 
-import { IRegisterUser } from "#Application/Interfaces/Dto/User/IUserCreateRequest.js";
+import { IUserCreateRequest } from "#Application/Interfaces/Request/User/IUserCreateRequest.js";
 import { JobContract } from "./JobContract.js";
 
 export enum UserJobs {
@@ -8,7 +8,7 @@ export enum UserJobs {
 }
 
 export interface UserPayloads {
-  [UserJobs.CreateUser]: IRegisterUser;
+  [UserJobs.CreateUser]: IUserCreateRequest;
 }
 
 export type UserContract = JobContract<UserJobs, UserPayloads>;

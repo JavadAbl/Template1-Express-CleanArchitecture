@@ -1,4 +1,4 @@
-import { User } from "#Domain/Entity/User.js";
+import { IUser } from "#Domain/Entity/IUser.js";
 
 export type IUserDto = {
   id: number;
@@ -8,7 +8,7 @@ export type IUserDto = {
   updatedAt: Date;
 };
 
-export function toUserDto(user: User): IUserDto {
+export function toUserDto(user: IUser): IUserDto {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password, ...dto } = user;
   return dto as IUserDto;

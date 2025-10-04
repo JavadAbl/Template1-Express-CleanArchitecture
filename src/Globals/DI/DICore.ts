@@ -1,14 +1,16 @@
 import { Container } from "inversify";
 import { DITypes } from "./DITypes.js";
 import { AppRoutes } from "#API/Routes/AppRoutes.js";
-import { IUserService } from "#Application/Interfaces/Services/IUserService.js";
+import { IUserService } from "#Application/Interfaces/Service/IUserService.js";
 import { UserService } from "#Application/Services/UserService.js";
 import { UserRepository } from "#Infrastructure/Database/Repository/UserRepository.js";
-import { IUserRepository } from "#Infrastructure/Database/Interfaces/IUserRepository.js";
 import { UserController } from "#API/Controllers/UserController.js";
 import { UserRoutes } from "#API/Routes/UserRoutes.js";
 import { PrismaClient } from "#Infrastructure/Database/Prisma/index.js";
 import { UserCache } from "#Infrastructure/Cache/UserCache.js";
+import { UserQueue } from "#Infrastructure/Queue/Queues/UserQueue.js";
+import { UserWorker } from "#Infrastructure/Queue/Workers/UserWorker.js";
+import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
 
 const container = new Container();
 
@@ -28,5 +30,11 @@ container.bind<IUserRepository>(DITypes.UserRepository).to(UserRepository).inSin
 
 // Bind Caches
 container.bind<UserCache>(DITypes.UserCache).to(UserCache).inSingletonScope();
+
+// Bind Queues
+container.bind<UserQueue>(DITypes.UserQueue).to(UserQueue).inSingletonScope();
+
+// Bind Workers
+container.bind<UserWorker>(DITypes.UserWorker).to(UserWorker).inSingletonScope();
 
 export { container };

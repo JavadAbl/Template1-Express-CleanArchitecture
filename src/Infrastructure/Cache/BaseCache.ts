@@ -16,23 +16,19 @@ export abstract class BaseCache {
     return `${this.prefix}:${key}`;
   }
 
-  async set(key: string, value: unknown, ttlSeconds?: number) {
+  protected async set(key: string, value: unknown, ttlSeconds?: number) {
     const redisKey = this.buildKey(key);
     try {
       const data = JSON.stringify(value);
-      if (ttlSeconds) {
-        await this.client.setEx(redisKey, ttlSeconds, data);
-      } else {
-        await this.client.set(redisKey, data);
-      }
-      this.logger.info(`Cache set: ${redisKey}`);
+      if (ttlSeconds) await this.client.setEx(redisKey, ttlSeconds, data);
+      else await this.client.set(redisKey, data);
     } catch (err) {
       this.logger.error(`Failed to set cache for key ${redisKey}`, err);
       throw err;
     }
   }
 
-  async get<T>(key: string): Promise<T | null> {
+  protected async get<T>(key: string): Promise<T | null> {
     const redisKey = this.buildKey(key);
     try {
       const data = await this.client.get(redisKey);
@@ -43,11 +39,10 @@ export abstract class BaseCache {
     }
   }
 
-  async delete(key: string) {
+  protected async delete(key: string) {
     const redisKey = this.buildKey(key);
     try {
       await this.client.del(redisKey);
-      this.logger.info(`Cache deleted: ${redisKey}`);
     } catch (err) {
       this.logger.error(`Failed to delete cache for key ${redisKey}`, err);
       throw err;

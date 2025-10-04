@@ -15,6 +15,12 @@ export const DITypes = {
 
   //Caches
   UserCache: Symbol.for("UserCache"),
+
+  //Queues
+  UserQueue: Symbol.for("UserQueue"),
+
+  //Workers
+  UserWorker: Symbol.for("UserWorker"),
 };
 
 Object.freeze(DITypes);
