@@ -13,19 +13,14 @@ import { IUserDto } from "#Application/Interfaces/Dto/User/IUserDto.js";
 import { IDeleteRequest } from "#Application/Interfaces/Request/Shared/IDeleteRequest.js";
 import { SDelete } from "#API/Schema/Shared/SDelete.js";
 import { IUserCreateRequest } from "#Application/Interfaces/Request/User/IUserCreateRequest.js";
-import { UserQueue } from "#Infrastructure/Queue/Queues/UserQueue.js";
+import { JwtUtil } from "#Globals/Utils/Jwt.js";
 
 @injectable()
 export class UserController {
-  constructor(
-    @inject(DITypes.UserService) private readonly userService: IUserService,
-    @inject(DITypes.UserQueue) private userQueue: UserQueue,
-  ) {}
+  constructor(@inject(DITypes.UserService) private readonly userService: IUserService) {}
 
   @zodValidation(SUserCreate, "body")
   public async post(req: Request<unknown, unknown, IUserCreateRequest, unknown>, res: Response) {
-    this.userQueue.createUserJob(req.body);
-    return res.send();
     const userDto = await this.userService.create(req.body);
     return res.status(status.CREATED).json(userDto);
   }

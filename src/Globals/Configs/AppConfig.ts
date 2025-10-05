@@ -10,6 +10,8 @@ class AppConfig {
   REDIS_ADDRESS?: string;
   REDIS_USERNAME?: string;
   REDIS_PASSWORD?: string;
+  JWT_ACCESS?: string;
+  JWT_REFRESH?: string;
 
   get isDev() {
     return this.NODE_ENV === "development";
@@ -24,6 +26,8 @@ class AppConfig {
     this.REDIS_ADDRESS = process.env.REDIS_ADDRESS;
     this.REDIS_USERNAME = process.env.REDIS_USERNAME;
     this.REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+    this.JWT_ACCESS = process.env.JWT_ACCESS;
+    this.JWT_REFRESH = process.env.JWT_REFRESH;
 
     this.validateConfig();
   }

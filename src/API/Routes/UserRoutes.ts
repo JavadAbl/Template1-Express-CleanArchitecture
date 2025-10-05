@@ -2,6 +2,7 @@ import { UserController } from "#API/Controllers/UserController.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
 import { Router } from "express";
 import { inject, injectable } from "inversify";
+import { th } from "zod/locales";
 
 @injectable()
 export class UserRoutes {
@@ -19,6 +20,7 @@ export class UserRoutes {
 
   private initializeRoutes(): void {
     this.router.get("/", (req, res) => this.userController.get(req, res));
+    this.router.get("/test/", (req, res) => this.userController.test(req, res));
     this.router.get("/:id", (req, res) => this.userController.getById(req, res));
     this.router.post("/", (req, res) => this.userController.post(req, res));
     this.router.put("/", (req, res) => this.userController.put(req, res));

@@ -28,6 +28,7 @@
     "hpp": "^0.2.3",
     "http-status": "^2.1.0",
     "inversify": "^7.10.0",
+    "jose": "^6.1.0",
     "morgan": "^1.10.1",
     "pino": "^9.9.5",
     "pino-pretty": "^13.1.1",
