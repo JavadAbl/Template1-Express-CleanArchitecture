@@ -5,6 +5,7 @@ export const DITypes = {
 
   //Controllers
   UserController: Symbol.for("UserController"),
+  TestController: Symbol.for("TestController"),
 
   //Services
   UserService: Symbol.for("UserService"),
@@ -21,6 +22,9 @@ export const DITypes = {
 
   //Workers
   UserWorker: Symbol.for("UserWorker"),
+
+  //Crons
+  UserCron: Symbol.for("UserCron"),
 };
 
 Object.freeze(DITypes);

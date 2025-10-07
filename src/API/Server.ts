@@ -6,13 +6,17 @@ import hpp from "hpp";
 import compression from "compression";
 import express from "express";
 import { container } from "#Globals/DI/DICore.js";
-import { AppRoutes } from "./Routes/AppRoutes.js";
 import { DITypes } from "#Globals/DI/DITypes.js";
 import status from "http-status";
-import { errorHandlerMiddleware } from "./Middlewars/ErrorHandlerMiddleware.js";
 import { config } from "#Globals/Configs/AppConfig.js";
 import { AppLogger } from "#Globals/Utils/Logger.js";
 import { UserWorker } from "#Infrastructure/Queue/Workers/UserWorker.js";
+import { ErrorHandlerMiddleware } from "./Middlewares/ErrorHandlerMiddleware.js";
+import { registerControllers } from "./Utils/RegisterControllers.js";
+import { UserController } from "./Controllers/UserController.js";
+import { discoverPermissions } from "./Utils/DiscoverPermissions.js";
+import { TestController } from "./Controllers/TestController.js";
+import { UserCron } from "#Infrastructure/Cron/UserCron.js";
 
 const logger = AppLogger.createLogger("Server");
 
@@ -24,6 +28,7 @@ export class AppServer {
       this.setupSecurityMiddlewares(this.app);
       this.setupStandardMiddlewares(this.app);
       this.setupRoutesMiddlewares(this.app);
+      this.setupPermissions();
       this.setupErrorHandler(this.app);
       this.setupHttpServer(this.app);
       this.setupWorkers();
@@ -58,8 +63,18 @@ export class AppServer {
 
   //--------------------------------------------------------------------------------
   private setupRoutesMiddlewares(app: Application): void {
-    const appRoutes = container.get<AppRoutes>(DITypes.AppRoutes);
-    app.use(appRoutes.routes());
+    // const appRoutes = container.get<AppRoutes>(DITypes.AppRoutes);
+    // app.use(appRoutes.routes());
+    registerControllers(app, [UserController, TestController]);
+  }
+
+  //--------------------------------------------------------------------------------
+  private setupPermissions(): void {
+    const permissions = discoverPermissions([UserController, TestController]);
+    console.log(permissions);
+
+    const userCron = container.get<UserCron>(DITypes.UserCron);
+    userCron.startAllJobs();
   }
 
   //--------------------------------------------------------------------------------
@@ -68,7 +83,7 @@ export class AppServer {
       res.status(status.NOT_FOUND).json({ message: "Not found" });
     });
 
-    app.use(errorHandlerMiddleware);
+    app.use(ErrorHandlerMiddleware.handle);
   }
 
   //--------------------------------------------------------------------------------

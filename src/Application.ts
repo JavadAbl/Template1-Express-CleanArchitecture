@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { AppServer } from "#API/Server.js";
 import express, { Application as ExpressApplication } from "express";
 

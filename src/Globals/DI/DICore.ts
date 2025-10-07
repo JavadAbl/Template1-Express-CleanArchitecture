@@ -11,11 +11,14 @@ import { UserCache } from "#Infrastructure/Cache/UserCache.js";
 import { UserQueue } from "#Infrastructure/Queue/Queues/UserQueue.js";
 import { UserWorker } from "#Infrastructure/Queue/Workers/UserWorker.js";
 import { IUserRepository } from "#Application/Interfaces/Repository/IUserRepository.js";
+import { TestController } from "#API/Controllers/TestController.js";
+import { UserCron } from "#Infrastructure/Cron/UserCron.js";
 
 const container = new Container();
 
 // Bind controllers
 container.bind<UserController>(DITypes.UserController).to(UserController).inSingletonScope();
+container.bind<TestController>(DITypes.TestController).to(TestController).inSingletonScope();
 
 // Bind Services
 container.bind<IUserService>(DITypes.UserService).to(UserService).inSingletonScope();
@@ -36,5 +39,8 @@ container.bind<UserQueue>(DITypes.UserQueue).to(UserQueue).inSingletonScope();
 
 // Bind Workers
 container.bind<UserWorker>(DITypes.UserWorker).to(UserWorker).inSingletonScope();
+
+// Bind Crons
+container.bind<UserCron>(DITypes.UserCron).to(UserCron).inSingletonScope();
 
 export { container };

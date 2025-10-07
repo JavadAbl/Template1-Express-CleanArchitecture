@@ -3,7 +3,7 @@ import status from "http-status";
 import { ZodType, ZodError } from "zod";
 import { Request } from "express";
 
-export function zodValidation(schema: ZodType<any>, dtoLocation: "body" | "params" | "query" = "body") {
+export function ZodValidation(schema: ZodType<any>, dtoLocation: "body" | "params" | "query" = "body") {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
